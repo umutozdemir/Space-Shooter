@@ -41,6 +41,8 @@ public class Player : MonoBehaviour
     private AudioClip _laserSound;
     private AudioSource _audioSource;
 
+    [SerializeField]
+    private Joystick _joystick;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +75,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (Input.GetKeyDown(KeyCode.Space)  && Time.time > _canFire)
         {
             FireLaser();
         }
@@ -81,14 +83,28 @@ public class Player : MonoBehaviour
 
     void CalculateMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        float forwardInput = Input.GetAxis("Mouse ScrollWheel");
-        //  transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
-        //  transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
-        //  transform.Translate(Vector3.forward * forwardInput * _speed * Time.deltaTime);
-        // transform.Translate(new Vector3(horizontalInput, verticalInput, forwardInput) * _speed * Time.deltaTime);
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, forwardInput);
+        float horizontalInput;
+        float verticalInput;
+      
+        if(_joystick.Horizontal >= .2f || _joystick.Horizontal <= -.2f)
+        {
+            horizontalInput = _joystick.Horizontal;
+        }
+        else
+        {
+            horizontalInput = 0f;
+        }
+
+        if(_joystick.Vertical >= .5f || _joystick.Vertical <= -.5f)
+        {
+            verticalInput = _joystick.Vertical;
+        }
+        else
+        {
+            verticalInput = 0f;
+        }
+        
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         transform.Translate(direction * _speed * Time.deltaTime);
 
         if (transform.position.y >= 6)
@@ -111,7 +127,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void FireLaser()
+    public void FireLaser()
     {
         _canFire = Time.time + _fireRate;
         if (_isTripleShotActive)

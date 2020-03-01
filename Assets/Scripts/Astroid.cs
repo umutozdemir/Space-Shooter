@@ -12,7 +12,6 @@ public class Astroid : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField]
     private AudioClip _explosionSound;
-    private AudioSource _audioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,11 +21,7 @@ public class Astroid : MonoBehaviour
         {
             Debug.LogError("Spawn Manager is null");
         }
-        _audioSource = gameObject.GetComponent<AudioSource>();
-        if(_audioSource == null)
-        {
-            Debug.LogError("Audio source is null");
-        }
+       
     }
 
     // Update is called once per frame
@@ -43,8 +38,7 @@ public class Astroid : MonoBehaviour
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();
             Destroy(this.gameObject,0.25f);
-            _audioSource.clip = _explosionSound;
-            _audioSource.Play();
+           
         }
     }
 }
